@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% import 'forms.html.jinja' as forms %}
+<html lang="en">
+<head>
+    <title>App</title>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+    <h1>My Webpage</h1>
+    <table>
+    {% for device in devices %}
+        {{ forms.kwtr('device', device) }}
+    {% endfor %}
+    </table>
+    <table>
+    {% for effect in effects %}
+        {{ forms.kwtr('effect', effect) }}
+    {% endfor %}
+    </table>
+    <table>
+    {% for binding in bindings %}
+        {{ forms.kwtr('binding', binding) }}
+    {% endfor %}
+</body>
+</html>

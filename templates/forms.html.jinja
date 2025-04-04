@@ -1,0 +1,18 @@
+{#
+Table row for editing keyvalues.
+type = type of object
+id = id of the object
+#}
+{% macro kwtr(type, kvs) %}
+<tr>
+    <input id="{{ type }}-{{ kvs.id }}-keys" value="{{  kvs | join(',')  }}" hidden>
+    {% for k, v in kvs | items %}
+        <td>
+            <input id="{{ type }}-{{ kvs.id }}-{{ k }}" value="{{ v | string }}">
+        </td>
+    {% endfor %}
+    <td>
+        <button type="submit" onclick="update('{{ type }}', '{{ kvs.id }}')">Update</button>
+    </td>
+</tr>
+{%- endmacro %}
