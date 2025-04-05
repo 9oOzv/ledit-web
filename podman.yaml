@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledit
+  namespace: default
+  labels:
+    app: ledit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ledit
+  template:
+    metadata:
+      labels:
+        app: ledit
+    spec:
+      hostNetwork: true
+      containers:
+        - name: ledit
+          image: docker.io/library/python:alpine
+          workingDir: /app
+          command:
+            - sh
+            - -c
+          args:
+            - |
+              set -euo pipefail
+              cd /app
+              python -m venv /venv
+              . /venv/bin/activate
+              pip install -r requirements.txt
+              pip install pyuwsgi
+              uwsgi --http 127.0.0.1:8083 --master -p 1 -w run:app
+          containerPort: 8083
+          volumeMounts:
+            - name: app
+              mountPath: /app
+      volumes:
+        - name: app
+          hostPath:
+            path: ./

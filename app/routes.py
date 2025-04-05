@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, current_app, Blueprint
 from .device import Device
 from .effect import Effect
 from .binding import Binding
@@ -8,8 +8,7 @@ from .error import SafeError
 from .util import float_to_uint16, int_to_uint16, int_to_uint8
 from .jinja_utils import jinja_utils
 
-
-app = Flask(__name__)
+bp = Blueprint('routes', __name__)
 
 devices = [
     Device(id='bedroom', name='Bedroom', ip='192.168.12.201', port=4210),
@@ -50,7 +49,7 @@ def send_udp(device: Device, message: bytes):
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.sendto(message, (str(device.ip), device.port))
 
-@app.context_processor
+@bp.context_processor
 def inject_jinja_utils():
     def random_string(length: int = 16) -> str:
         import random
@@ -64,12 +63,12 @@ def inject_jinja_utils():
     return dict(random_string=random_string)
 
 
-@app.template_test(name='list')
+@bp.app_template_test(name='list')
 def is_list(value):
     return isinstance(value, list)
 
 
-@app.errorhandler(SafeError)
+@bp.errorhandler(SafeError)
 def handle_error(error):
     return str(error), 400
 
@@ -85,7 +84,7 @@ def send_updates():
         send_udp(d, data)
 
 
-@app.route("/update", methods=["POST"])
+@bp.route("/update", methods=["POST"])
 def update():
     data = request.json
     type_ = data.get("type")
@@ -109,7 +108,7 @@ def update():
     return "OK"
 
 
-@app.route("/")
+@bp.route("/")
 def index():
     return render_template(
         "index.html.jinja",
