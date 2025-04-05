@@ -1,10 +1,10 @@
 
-async function update_data(type, id, kvs) {
-    console.debug('Updating', { type, id, kvs });
+async function update_data(type, kvs) {
+    console.debug('Updating', { type, kvs });
     const url = '/update'
     const data = {
         type: type,
-        id: id,
+        id: kvs['id'],
         fields: kvs,
     }
     try {
@@ -24,12 +24,12 @@ async function update_data(type, id, kvs) {
 }
 
 
-function read_input(type, id, keys) {
-    console.debug('Reading inputs', { type, id, keys });
+function read_input(form_id, keys) {
+    console.debug('Reading inputs', { form_id, keys });
     const kvs = {};
     for(const key of keys) {
-        console.debug('Reading input', { type, id, key });
-        const inputId = type + '-' + id + '-' + key;
+        console.debug('Reading input', { form_id, key });
+        const inputId = form_id + '-' + key;
         const v = document.getElementById(inputId).value;
         kvs[key] = v;
         console.debug('Found value', { key, v });
@@ -38,20 +38,30 @@ function read_input(type, id, keys) {
 }
 
 
-function get_keys(type, id) {
-    console.debug('Getting keys', { type, id });
+function get_keys(form_id) {
+    console.debug('Getting keys', { form_id });
     return (
         document
-        .getElementById(`${type}-${id}-keys`)
+        .getElementById(`${form_id}-keys`)
         .value
         .split(',')
     );
 }
 
+function get_type(form_id) {
+    console.debug('Getting type', { form_id });
+    return (
+        document
+        .getElementById(`${form_id}-type`)
+        .value
+    );
+}
 
-async function update(type, id) {
-    console.info('Updating', type, id);
-    const keys = get_keys(type, id);
-    const kvs = read_input(type, id, keys);
-    await update_data(type, id, kvs);
+
+async function update(form_id) {
+    console.info('Updating', { form_id });
+    const keys = get_keys(form_id);
+    const type = get_type(form_id);
+    const kvs = read_input(form_id, keys);
+    await update_data(type, kvs);
 }

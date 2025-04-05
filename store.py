@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 from .device import Device
 from .effect import Effect
 from .binding import Binding
@@ -21,16 +21,16 @@ class Store(BaseModel):
             raise ValueError("Multiple effects with the same id")
         return effects
 
-    @field_validator("bindings")
-    def bindings_validator(cls, bindings):
-        for binding in bindings:
-            if binding.device_id not in {device.id for device in cls.devices}:
+    @model_validator(mode="after")
+    def bindings_validator(self):
+        for binding in self.bindings:
+            if binding.device_id not in {device.id for device in self.devices}:
                 raise ValueError(f"Unknown device: {binding.device_id}")
-            if binding.effect_id not in {effect.id for effect in cls.effects}:
+            if binding.effect_id not in {effect.id for effect in self.effects}:
                 raise ValueError(f"Unknown effect: {binding.effect_id}")
-        if len(bindings) != len({binding.device_id for binding in bindings}):
+        if len(self.bindings) != len({binding.device_id for binding in self.bindings}):
             raise ValueError("Multiple bindings for the same device")
-        return bindings
+        return self
 
     def update_device(
         self,
@@ -70,3 +70,22 @@ class Store(BaseModel):
                 self.bindings[i] = binding
                 return
         self.bindings.append(binding)
+
+    def get_by_id(
+        self,
+        objects: list,
+        id: str,
+    ):
+        for obj in objects:
+            if obj.id == id:
+                return obj
+        return None
+
+    def get_device(self, id: str) -> Device | None:
+        return self.get_by_id(self.devices, id)
+
+    def get_effect(self, id: str) -> Effect | None:
+        return self.get_by_id(self.effects, id)
+
+    def get_binding(self, id: str) -> Binding | None:
+        return self.get_by_id(self.bindings, id)
