@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'mononoki';
+    src: url('./fonts/mononoki-nerd/MononokiNerdFontMono-Bold.ttf') format('truetype');
+    font-weight: 1000;
+    font-style: normal;
+}
+
+:root {
+    font-size: 1rem;
+    --ah: -30;
+    --as: 80%;
+    --al: 60%;
+    --ah2: calc(var(--ah) + 20);
+    --as2: calc(var(--as));
+    --al2: calc(var(--al));
+    --bh: 190;
+    --bs: 80%;
+    --bl: 60%;
+    --bh2: calc(var(--bh) + 20);
+    --bs2: calc(var(--bs));
+    --bl2: calc(var(--bl));
+    --ch: 100;
+    --cs: 80%;
+    --cl: 50%;
+    --ch2: calc(var(--ch) + 20);
+    --a: hsl(var(--ah), var(--as), var(--al));
+    --a2: hsl(var(--ah2), var(--as2), var(--al2));
+    --b: hsl(var(--bh), var(--bs), var(--bl));
+    --b2: hsl(var(--bh2), var(--bs2), var(--bl2));
+    --c: hsl(var(--ch), var(--cs), var(--cl));
+    --c2: hsl(var(--ch2), var(--cs), var(--cl));
+    --bg-a: hsl(0, 0%, 0%);
+    --bg-b: hsl(0, 0%, 5%);
+}
+
+* {
+    font-family: 'mononoki', monospace;
+    font-size: 1.4rem;
+}
+
+h1, h2, h3, h4 {
+    margin: 3rem 2rem;
+    margin-top: 5rem;
+}
+
+h1 {
+    font-size: 4rem;
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+h3 {
+    font-size: 2rem;
+}
+
+body {
+    color: var(--a);
+    background: var(--bg-a);
+}
+
+p {
+    margin: 1rem 2rem;
+}
+
+button, input {
+    padding: 1rem 2rem;
+    margin: 0.5rem 0.6rem;
+}
+
+button:first-child, input:first-child {
+    margin-left: 0;
+}
+
+button {
+    border: solid 0.2rem var(--c);
+    background: var(--bg-b);
+    color: var(--c);
+}
+
+input {
+    border: solid 0.2rem var(--b);
+    background: var(--bg-b);
+    color: var(--b);
+}

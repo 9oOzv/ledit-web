@@ -5,53 +5,52 @@ id = id of the object
 #}
 
 
-{% macro input(form_id, key, value, hidden = false) %}
-    {% if value is string %}
+{% macro input(form_id, key, value, hidden = false) -%}
+    {%- if value is string -%}
         <input id="{{ form_id }}-{{ key }}" value="{{ value }}" {% if hidden %}hidden{% endif %}>
-    {% elif value is number %}
+    {%- elif value is number -%}
         <input id="{{ form_id }}-{{ key }}" value="{{ value }} {% if hidden %}hidden{% endif %}">
-    {% elif value is boolean %}
+    {%- elif value is boolean -%}
         <input id="{{ form_id }}-{{ key }}" value="{{ value | tojson }}" {% if hidden %}hidden{% endif %}>
-    {% elif value is list %}
+    {%- elif value is list -%}
         <input id="{{ form_id }}-{{ key }}" value="{{ value | tojson }}" {% if hidden %}hidden{% endif %}>
-    {% else %}
-    {% endif %}
+    {%- else -%}
+    {%- endif -%}
 {%- endmacro %}
 
 
-{% macro hidden(form_id, key, value) %}
-    {{ input(form_id, key, value, true) }}
+{% macro hidden(form_id, key, value) -%}
+    {{- input(form_id, key, value, true) }}
 {%- endmacro %}
 
 
-{% macro submit(form_id, text) %}
+{% macro submit(form_id, text) -%}
     <button type="submit" onclick="update('{{ form_id }}')">{{ text }}</button>
 {%- endmacro %}
 
 
-{% macro form_start(form_id, type, keys) %}
-    <input id="{{ form_id }}-type" value="{{ type }}" hidden>
-    <input id="{{ form_id }}-keys" value="{{ keys | join(',') }}" hidden>
+{% macro form_start(form_id, type, keys) -%}
+    <input id="{{ form_id }}-type" value="{{ type }}" hidden><input id="{{ form_id }}-keys" value="{{ keys | join(',') }}" hidden>
 {%- endmacro %}
 
 
-{% macro edit(type, kvs) %}
-    {% set form_id = random_string() %}
-    {{ form_start(form_id, type, kvs.keys()) }}
-    {% for k, v in kvs | items %}
-        {{ input(form_id, k, v) }}
-    {% endfor %}
-    {{ submit(form_id, 'Update') }}
+{% macro edit(type, kvs) -%}
+    {%- set form_id = random_string() -%}
+    {{- form_start(form_id, type, kvs.keys()) }}
+    {%- for k, v in kvs | items -%}
+    {{- input(form_id, k, v) }}
+    {%- endfor %}
+    {{- submit(form_id, 'Update') }}
 {%- endmacro %}
 
 
-{% macro device_effects(type, device, effects) %}
-{% for e in effects %}
-    {% set form_id = random_string() %}
-    {{ form_start(form_id, 'binding', ['id', 'device_id', 'effect_id']) }}
-    {{ hidden(form_id, 'id', device.id) }}
-    {{ hidden(form_id, 'device_id', device.id) }}
-    {{ hidden(form_id, 'effect_id', e.id) }}
-    {{ submit(form_id, e.name) }}
-{% endfor %}
+{% macro device_effects(type, device, effects) -%}
+{%- for e in effects -%}
+    {%- set form_id = random_string() -%}
+    {{- form_start(form_id, 'binding', ['id', 'device_id', 'effect_id']) }}
+    {{- hidden(form_id, 'id', device.id) }}
+    {{- hidden(form_id, 'device_id', device.id) }}
+    {{- hidden(form_id, 'effect_id', e.id) }}
+    {{- submit(form_id, e.name) }}
+{%- endfor %}
 {%- endmacro %}

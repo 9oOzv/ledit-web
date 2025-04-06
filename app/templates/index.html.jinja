@@ -1,35 +1,35 @@
-<!DOCTYPE html>
 {% import 'forms.html.jinja' as forms with context %}
-<html lang="en">
-<head>
-    <title>App</title>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-</head>
+{% include 'header.html.jinja' %}
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 <body>
     <h1>Ledit</h1>
-    {% for device in devices %}
+    {%- for device in devices %}
         <div>
             <h2>{{ device.name }}</h2>
-            {{ forms.device_effects('device', device, effects) }}
+            <p>
+                {{- forms.device_effects('device', device, effects) -}}
+            </p>
         </div>
-    {% endfor %}
-    <h2>Devices</h2
-    {% for device in devices %}
-        <div>
-            {{ forms.edit('device', device) }}
-        </div>
-    {% endfor %}
+    {%- endfor %}
+    <h2>Devices</h2>
+    {%- for device in devices %}
+        <p>
+            {{- forms.edit('device', device) -}}
+        </p>
+    {%- endfor %}
     <h2>Effects</h2>
-    {% for effect in effects %}
-        <div>
-            {{ forms.edit('effect', effect) }}
-        </div>
-    {% endfor %}
+    {%- for effect in effects %}
+        <p>
+            {{- forms.edit('effect', effect) -}}
+        </p>
+    {%- endfor %}
     <h2>Bindings</h2>
-    {% for binding in bindings %}
-        <div>
-            {{ forms.edit('binding', binding) }}
-        </div>
-    {% endfor %}
+    {%- for binding in bindings %}
+        <p>
+            {{- forms.edit('binding', binding) -}}
+        </p>
+    {%- endfor %}
 </body>
-</html>
+
+{% include 'footer.html.jinja' %}
